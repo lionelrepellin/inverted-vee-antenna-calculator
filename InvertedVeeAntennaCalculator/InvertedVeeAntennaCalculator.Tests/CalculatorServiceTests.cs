@@ -34,6 +34,17 @@ namespace InvertedVeeAntennaCalculator.Tests
 		}
 
 		[Test]
+		public void GetHeightWithZeroElevation()
+		{
+			var service = new CalculatorService(7.1, 0);
+
+			var result = service.GetHeight();
+
+			result = Math.Round(result, 2);
+			Check.That(result).IsEqualTo(5);
+		}
+
+		[Test]
 		public void GetHeightWithElevation()
 		{
 			var service = new CalculatorService(7.1, 2);
@@ -48,6 +59,17 @@ namespace InvertedVeeAntennaCalculator.Tests
 		public void GetGroundLength()
 		{
 			var service = new CalculatorService(7.1);
+
+			var result = service.GetGroundLength();
+
+			result = Math.Round(result, 2);
+			Check.That(result).IsEqualTo(17.32);
+		}
+
+		[Test]
+		public void GetGroundLengthWithZeroElevation()
+		{
+			var service = new CalculatorService(7.1, 0);
 
 			var result = service.GetGroundLength();
 

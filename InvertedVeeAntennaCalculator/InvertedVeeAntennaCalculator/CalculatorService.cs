@@ -9,16 +9,16 @@ namespace InvertedVeeAntennaCalculator
 	public class CalculatorService
 	{
 		private const int X = 142;
-		private const int Angle = 60;
+		private const int Angle = 60; // degrees
 
 		private double _frequency;
 		private double _elevation;
 		private double _ratio;
-		
+
 		/// <summary>
-		/// Frequency in MHz
+		/// Constructor
 		/// </summary>
-		/// <param name="frequency"></param>
+		/// <param name="frequency">Frequency in MHz</param>
 		public CalculatorService(double frequency) 
 			=> _frequency = frequency;
 
@@ -45,10 +45,8 @@ namespace InvertedVeeAntennaCalculator
 		/// Get height of the antenna (in meters)
 		/// </summary>
 		/// <returns></returns>
-		public double GetHeight()
-		{
-			return GetAntennaHeight(_elevation);
-		}
+		public double GetHeight() 
+			=> GetAntennaHeight(_elevation);		
 
 		/// <summary>
 		/// Get the total length of the ground (in meters)
@@ -71,12 +69,16 @@ namespace InvertedVeeAntennaCalculator
 		/// <summary>
 		/// Get the rope length to add for each pole
 		/// </summary>
+		/// <remarks>This is the rope length to attach one end of the antenna to the ground</remarks>
 		/// <returns></returns>
-		public double GetRopeLengthToAdd() => _ratio * GetOnePoleLength() - GetOnePoleLength();
+		public double GetRopeLengthToAdd() 
+			=> _ratio * GetOnePoleLength() - GetOnePoleLength();
 
-		private double GetOnePoleLength() => GetTotalLength() / 2;
+		private double GetOnePoleLength() 
+			=> GetTotalLength() / 2;
 
-		private double GetRadian() => (Angle / 2) * (Math.PI / 180);
+		private double GetRadian() 
+			=> (Angle / 2) * (Math.PI / 180);
 
 		private double GetAntennaHeight(double elevation)
 		{
