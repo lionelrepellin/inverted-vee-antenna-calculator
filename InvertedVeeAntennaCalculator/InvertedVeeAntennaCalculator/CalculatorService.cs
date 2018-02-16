@@ -8,6 +8,9 @@ namespace InvertedVeeAntennaCalculator
 {
 	public class CalculatorService
 	{
+		private const double MinFrequencyAllowed = 0.1;
+		private const double MaxFrequencyAllowed = 30;
+		private const double MinElevationAllowed = 0;
 		private const int X = 142;
 		private const int Angle = 60; // degrees
 
@@ -19,8 +22,13 @@ namespace InvertedVeeAntennaCalculator
 		/// Constructor
 		/// </summary>
 		/// <param name="frequency">Frequency in MHz</param>
-		public CalculatorService(double frequency) 
-			=> _frequency = frequency;
+		public CalculatorService(double frequency)
+		{
+			if (frequency < MinFrequencyAllowed || frequency > MaxFrequencyAllowed)
+				throw new ArgumentOutOfRangeException(nameof(frequency), $"Frequency should be between {MinFrequencyAllowed} and {MaxFrequencyAllowed} MHz.");
+
+			_frequency = frequency;
+		}
 
 		/// <summary>
 		/// Constructor
@@ -30,23 +38,26 @@ namespace InvertedVeeAntennaCalculator
 		public CalculatorService(double frequency, double elevation)
 			: this(frequency)
 		{
+			if (elevation < MinElevationAllowed)
+				throw new ArgumentOutOfRangeException(nameof(elevation), $"Elevation should not be less than {MinElevationAllowed} meter.");
+
 			_elevation = elevation;
 			_ratio = GetAntennaHeight(elevation) / GetAntennaHeight(0);
 		}
-		
+
 		/// <summary>
 		/// Get total length of the antenna (in meters)
 		/// </summary>
 		/// <returns></returns>
-		public double GetTotalLength() 
+		public double GetTotalLength()
 			=> X / _frequency;
 
 		/// <summary>
 		/// Get height of the antenna (in meters)
 		/// </summary>
 		/// <returns></returns>
-		public double GetHeight() 
-			=> GetAntennaHeight(_elevation);		
+		public double GetHeight()
+			=> GetAntennaHeight(_elevation);
 
 		/// <summary>
 		/// Get the total length of the ground (in meters)
@@ -59,10 +70,10 @@ namespace InvertedVeeAntennaCalculator
 			var groundLength = (Math.Cos(radian) * length) * 2;
 
 			if (_ratio > 0)
-			{				
+			{
 				groundLength *= _ratio;
 			}
-			
+
 			return groundLength;
 		}
 
@@ -71,13 +82,13 @@ namespace InvertedVeeAntennaCalculator
 		/// </summary>
 		/// <remarks>This is the rope length to attach one end of the antenna to the ground</remarks>
 		/// <returns></returns>
-		public double GetRopeLengthToAdd() 
+		public double GetRopeLengthToAdd()
 			=> _ratio * GetOnePoleLength() - GetOnePoleLength();
 
-		private double GetOnePoleLength() 
+		private double GetOnePoleLength()
 			=> GetTotalLength() / 2;
 
-		private double GetRadian() 
+		private double GetRadian()
 			=> (Angle / 2) * (Math.PI / 180);
 
 		private double GetAntennaHeight(double elevation)

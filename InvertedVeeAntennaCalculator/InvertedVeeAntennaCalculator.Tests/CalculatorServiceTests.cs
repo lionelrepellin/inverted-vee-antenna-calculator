@@ -10,7 +10,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 {
 	[TestFixture]
 	public class CalculatorServiceTests
-	{		
+	{
 		[Test]
 		public void GetTotalLength()
 		{
@@ -97,6 +97,33 @@ namespace InvertedVeeAntennaCalculator.Tests
 
 			result = Math.Round(result, 2);
 			Check.That(result).IsEqualTo(4);
+		}
+
+		[Test]
+		public void LowerThanMinFrequencyThrowsAnException()
+		{
+			Check.ThatCode(() =>
+			{
+				new CalculatorService(0);
+			}).Throws<ArgumentOutOfRangeException>();
+		}
+
+		[Test]
+		public void UpperThanMaxFrequencyThrowsAnException()
+		{
+			Check.ThatCode(() =>
+			{
+				new CalculatorService(30.1);
+			}).Throws<ArgumentOutOfRangeException>();
+		}
+
+		[Test]
+		public void ElevationUnderZeroMeterThrowsAnException()
+		{
+			Check.ThatCode(() =>
+			{
+				new CalculatorService(14, -1);
+			}).Throws<ArgumentOutOfRangeException>();
 		}
 	}
 }

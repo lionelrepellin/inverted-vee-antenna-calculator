@@ -39,8 +39,7 @@ namespace InvertedVeeAntennaCalculator
 
 			foreach (var model in bands)
 			{
-				var centerFrequency = model.CenterFrequency;
-				
+				var centerFrequency = model.CenterFrequency;				
 				var elevationToTest = _maxElevation;
 				var bandAdded = false;
 
@@ -76,7 +75,7 @@ namespace InvertedVeeAntennaCalculator
 		{
 			return new List<BandModel>
 			{
-				new BandModel(2220, 0.1357, 0.1378),
+				new BandModel(2200, 0.1357, 0.1378),
 				new BandModel(630, 0.472, 0.479),
 				new BandModel(160, 1.810, 1.850),
 				new BandModel(80, 3.500, 3.800),
@@ -89,6 +88,8 @@ namespace InvertedVeeAntennaCalculator
 				new BandModel(10, 28.000, 29.700)
 			};
 		}
+
+		#region Band model
 
 		private class BandModel
 		{
@@ -107,6 +108,8 @@ namespace InvertedVeeAntennaCalculator
 				_maxFrequency = maxFrequency;
 			}
 		}
+
+		#endregion
 	}
 
 	public class AntennaModel
