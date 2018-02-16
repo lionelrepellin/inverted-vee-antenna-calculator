@@ -16,9 +16,7 @@ namespace InvertedVeeAntennaCalculator
 		/// </summary>
 		/// <param name="maxGroundLength">Maximum ground length available (in meters)</param>
 		public AntennaBuilder(int maxGroundLength)
-		{
-			_maxGroundLength = maxGroundLength;
-		}
+			=> _maxGroundLength = maxGroundLength;
 
 		/// <summary>
 		/// Constructor
@@ -39,7 +37,7 @@ namespace InvertedVeeAntennaCalculator
 
 			foreach (var model in bands)
 			{
-				var centerFrequency = model.CenterFrequency;				
+				var centerFrequency = model.CenterFrequency;
 				var elevationToTest = _maxElevation;
 				var bandAdded = false;
 
@@ -54,6 +52,7 @@ namespace InvertedVeeAntennaCalculator
 						{
 							Band = model.Band,
 							CenterFrequency = centerFrequency,
+							MinFrequency = model.MinFrequency,
 							Height = service.GetHeight(),
 							TotalLength = groundLength,
 							MaxElevation = elevationToTest
@@ -69,6 +68,40 @@ namespace InvertedVeeAntennaCalculator
 			}
 
 			return list;
+		}
+
+		public AntennaMaxModel GetMaxAntennaLength()
+		{
+			var workableBands = GetWorkableBands();
+			var minWorkableFrequency = workableBands.First().MinFrequency;
+
+			double antennaGroundLength = 0;
+			double antennaHeight = 0;
+			double antennaLength = 0;
+			double minFrequency = 0;
+
+			for (var frequency = minWorkableFrequency; frequency > 0; frequency -= 0.1)
+			{
+				var service = new CalculatorService(frequency);
+				var groundLength = service.GetGroundLength();
+
+				if (groundLength <= _maxGroundLength)
+				{
+					antennaGroundLength = groundLength;
+					antennaLength = service.GetTotalLength();
+					antennaHeight = service.GetHeight();					
+					minFrequency = frequency;
+				}
+				else break;
+			}
+
+			return new AntennaMaxModel
+			{
+				Height = antennaHeight,
+				MinFrequency = minFrequency,
+				AntennaLength = antennaLength,
+				GroundLength = antennaGroundLength
+			};
 		}
 
 		private IEnumerable<BandModel> GetHamRadioBands()
@@ -91,6 +124,7 @@ namespace InvertedVeeAntennaCalculator
 
 		#region Band model
 
+
 		private class BandModel
 		{
 			private int _band;
@@ -99,6 +133,7 @@ namespace InvertedVeeAntennaCalculator
 			private double _bandWidth => _maxFrequency - _minFrequency;
 
 			public int Band => _band;
+			public double MinFrequency => _minFrequency;
 			public double CenterFrequency => _minFrequency + (_bandWidth / 2);
 
 			public BandModel(int band, double minFrequency, double maxFrequency)
@@ -112,12 +147,22 @@ namespace InvertedVeeAntennaCalculator
 		#endregion
 	}
 
+	public class AntennaMaxModel
+	{
+		public double MinFrequency { get; set; }
+		public double AntennaLength { get; set; }
+		public double GroundLength { get; set; }
+		public double Height { get; set; }
+	}
+
 	public class AntennaModel
 	{
 		public int Band { get; set; }
 		public double CenterFrequency { get; set; }
-		public double TotalLength { get; set; }
+		public double MinFrequency { get; set; }
 		public double Height { get; set; }
-		public double MaxElevation { get; set; }
+		public double MaxElevation { get; set; }		
+		public double TotalLength { get; set; }		
 	}
+
 }

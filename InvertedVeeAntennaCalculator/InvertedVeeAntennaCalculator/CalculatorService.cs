@@ -8,11 +8,11 @@ namespace InvertedVeeAntennaCalculator
 {
 	public class CalculatorService
 	{
-		private const double MinFrequencyAllowed = 0.1;
-		private const double MaxFrequencyAllowed = 30;
-		private const double MinElevationAllowed = 0;
+		private const double MinFrequencyAllowed = 0.1; // MHz
+		private const double MaxFrequencyAllowed = 30; // MHz
+		private const double MinElevationAllowed = 0; // meter
 		private const int X = 142;
-		private const int Angle = 60; // degrees
+		private const int Angle = 120; // degrees at the top of the mast
 
 		private double _frequency;
 		private double _elevation;
@@ -65,9 +65,9 @@ namespace InvertedVeeAntennaCalculator
 		/// <returns></returns>
 		public double GetGroundLength()
 		{
-			var length = GetOnePoleLength();
+			var length = GetOnePoleLength(); // hypotenuse
 			var radian = GetRadian();
-			var groundLength = (Math.Cos(radian) * length) * 2;
+			var groundLength = (Math.Sin(radian) * length) * 2;
 
 			if (_ratio > 0)
 			{
@@ -93,10 +93,10 @@ namespace InvertedVeeAntennaCalculator
 
 		private double GetAntennaHeight(double elevation)
 		{
-			var length = GetOnePoleLength();
+			var length = GetOnePoleLength(); // hypothenuse
 			var radian = GetRadian();
 
-			return Math.Sin(radian) * length + elevation;
+			return Math.Cos(radian) * length + elevation;
 		}
 	}
 }

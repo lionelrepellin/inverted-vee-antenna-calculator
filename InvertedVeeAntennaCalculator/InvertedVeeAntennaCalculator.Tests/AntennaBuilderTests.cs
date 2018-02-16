@@ -38,5 +38,18 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var thirtyMeters = models.Single(x => x.Band == 30);
 			Check.That(thirtyMeters.MaxElevation).IsEqualTo(3);
 		}
+
+
+		[Test]
+		public void GetMaxAntennaLength()
+		{
+			var builder = new AntennaBuilder(MaxGroundLenghtAvailable);
+			var model = builder.GetMaxAntennaLength();
+			
+			Check.That(Math.Round(model.Height, 2)).IsEqualTo(7.4); // meter
+			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.8); // MHz
+			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(29.58); // meter
+			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.62); // meter
+		}
 	}
 }
