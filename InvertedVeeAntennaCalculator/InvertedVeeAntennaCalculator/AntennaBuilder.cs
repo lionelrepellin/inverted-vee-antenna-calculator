@@ -8,6 +8,9 @@ namespace InvertedVeeAntennaCalculator
 {
 	public class AntennaBuilder
 	{
+		private const double MinGroundLengthAllowed = 1; // meter
+		private const double MinElevationAllowed = 0; // meter
+		
 		private int _maxGroundLength;
 		private int _maxElevation;
 
@@ -16,7 +19,12 @@ namespace InvertedVeeAntennaCalculator
 		/// </summary>
 		/// <param name="maxGroundLength">Maximum ground length available (in meters)</param>
 		public AntennaBuilder(int maxGroundLength)
-			=> _maxGroundLength = maxGroundLength;
+		{
+			if(maxGroundLength < MinGroundLengthAllowed)
+				throw new ArgumentOutOfRangeException(nameof(maxGroundLength), $"Ground length should not be less than {MinGroundLengthAllowed} meter.");
+
+			_maxGroundLength = maxGroundLength;
+		}
 
 		/// <summary>
 		/// Constructor
@@ -26,9 +34,16 @@ namespace InvertedVeeAntennaCalculator
 		public AntennaBuilder(int maxGroundLength, int maxElevation)
 			: this(maxGroundLength)
 		{
+			if (maxElevation < MinElevationAllowed)
+				throw new ArgumentOutOfRangeException(nameof(maxElevation), $"Elevation should not be less than {MinElevationAllowed} meter.");
+
 			_maxElevation = maxElevation;
 		}
 
+		/// <summary>
+		/// Get all workable bands for the specified available ground length (and elevation)
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<AntennaModel> GetWorkableBands()
 		{
 			var list = new List<AntennaModel>();
@@ -67,9 +82,16 @@ namespace InvertedVeeAntennaCalculator
 				while (elevationToTest > 0 && !bandAdded);
 			}
 
+			if(!list.Any())
+				throw new NotEnoughSpaceException(_maxGroundLength);
+
 			return list;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public AntennaMaxModel GetMaxAntennaLength()
 		{
 			var workableBands = GetWorkableBands();
@@ -88,8 +110,8 @@ namespace InvertedVeeAntennaCalculator
 				if (groundLength <= _maxGroundLength)
 				{
 					antennaGroundLength = groundLength;
+					antennaHeight = service.GetHeight();
 					antennaLength = service.GetTotalLength();
-					antennaHeight = service.GetHeight();					
 					minFrequency = frequency;
 				}
 				else break;
@@ -97,10 +119,10 @@ namespace InvertedVeeAntennaCalculator
 
 			return new AntennaMaxModel
 			{
+				GroundLength = antennaGroundLength,
 				Height = antennaHeight,
-				MinFrequency = minFrequency,
 				AntennaLength = antennaLength,
-				GroundLength = antennaGroundLength
+				MinFrequency = minFrequency
 			};
 		}
 
@@ -123,8 +145,7 @@ namespace InvertedVeeAntennaCalculator
 		}
 
 		#region Band model
-
-
+		
 		private class BandModel
 		{
 			private int _band;
@@ -134,7 +155,7 @@ namespace InvertedVeeAntennaCalculator
 
 			public int Band => _band;
 			public double MinFrequency => _minFrequency;
-			public double CenterFrequency => _minFrequency + (_bandWidth / 2);
+			public double CenterFrequency => Math.Round(_minFrequency + (_bandWidth / 2), 2);
 
 			public BandModel(int band, double minFrequency, double maxFrequency)
 			{
@@ -161,8 +182,8 @@ namespace InvertedVeeAntennaCalculator
 		public double CenterFrequency { get; set; }
 		public double MinFrequency { get; set; }
 		public double Height { get; set; }
-		public double MaxElevation { get; set; }		
-		public double TotalLength { get; set; }		
+		public double MaxElevation { get; set; }
+		public double TotalLength { get; set; }
 	}
 
 }

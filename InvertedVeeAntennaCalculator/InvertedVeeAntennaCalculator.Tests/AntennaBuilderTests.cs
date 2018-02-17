@@ -39,6 +39,16 @@ namespace InvertedVeeAntennaCalculator.Tests
 			Check.That(thirtyMeters.MaxElevation).IsEqualTo(3);
 		}
 
+		[Test]
+		public void ThrowsAnExceptionIfNotEnoughSpace()
+		{
+			var builder = new AntennaBuilder(3);
+
+			Check.ThatCode(() =>
+			{
+				builder.GetWorkableBands();
+			}).Throws<NotEnoughSpaceException>();
+		}
 
 		[Test]
 		public void GetMaxAntennaLength()
@@ -50,6 +60,24 @@ namespace InvertedVeeAntennaCalculator.Tests
 			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.8); // MHz
 			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(29.58); // meter
 			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.62); // meter
+		}
+		
+		[Test]
+		public void LowerThenMinGroundLenghtAllowedThrowsAnException()
+		{
+			Check.ThatCode(() =>
+			{
+				new AntennaBuilder(0);
+			}).Throws<ArgumentOutOfRangeException>();
+		}
+
+		[Test]
+		public void ElevationUnderZeroMeterThrowsAnException()
+		{
+			Check.ThatCode(() =>
+			{
+				new AntennaBuilder(1, -1);
+			}).Throws<ArgumentOutOfRangeException>();
 		}
 	}
 }
