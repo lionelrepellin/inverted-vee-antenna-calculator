@@ -10,7 +10,8 @@ namespace InvertedVeeAntennaCalculator
 	{
 		private const double MinGroundLengthAllowed = 1; // meter
 		private const double MinElevationAllowed = 0; // meter
-		
+		private const double FrequencyStep = 0.01; // MHz
+
 		private int _maxGroundLength;
 		private int _maxElevation;
 
@@ -20,7 +21,7 @@ namespace InvertedVeeAntennaCalculator
 		/// <param name="maxGroundLength">Maximum ground length available (in meters)</param>
 		public AntennaBuilder(int maxGroundLength)
 		{
-			if(maxGroundLength < MinGroundLengthAllowed)
+			if (maxGroundLength < MinGroundLengthAllowed)
 				throw new ArgumentOutOfRangeException(nameof(maxGroundLength), $"Ground length should not be less than {MinGroundLengthAllowed} meter.");
 
 			_maxGroundLength = maxGroundLength;
@@ -43,6 +44,7 @@ namespace InvertedVeeAntennaCalculator
 		/// <summary>
 		/// Get all workable bands for the specified available ground length (and elevation)
 		/// </summary>
+		/// <exception cref="NotEnoughSpaceException"></exception>
 		/// <returns></returns>
 		public IEnumerable<AntennaModel> GetWorkableBands()
 		{
@@ -82,14 +84,14 @@ namespace InvertedVeeAntennaCalculator
 				while (elevationToTest > 0 && !bandAdded);
 			}
 
-			if(!list.Any())
+			if (!list.Any())
 				throw new NotEnoughSpaceException(_maxGroundLength);
 
 			return list;
 		}
 
 		/// <summary>
-		/// 
+		/// Get all informations to mount the longuest antenna depending of the maximum available ground length
 		/// </summary>
 		/// <returns></returns>
 		public AntennaMaxModel GetMaxAntennaLength()
@@ -102,7 +104,7 @@ namespace InvertedVeeAntennaCalculator
 			double antennaLength = 0;
 			double minFrequency = 0;
 
-			for (var frequency = minWorkableFrequency; frequency > 0; frequency -= 0.1)
+			for (var frequency = minWorkableFrequency; frequency > 0; frequency -= FrequencyStep)
 			{
 				var service = new CalculatorService(frequency);
 				var groundLength = service.GetGroundLength();
@@ -134,6 +136,7 @@ namespace InvertedVeeAntennaCalculator
 				new BandModel(630, 0.472, 0.479),
 				new BandModel(160, 1.810, 1.850),
 				new BandModel(80, 3.500, 3.800),
+				new BandModel(60, 5.3515, 5.3665),
 				new BandModel(40, 7.000, 7.200),
 				new BandModel(30, 10.100, 10.150),
 				new BandModel(20, 14.000, 14.350),
@@ -145,7 +148,7 @@ namespace InvertedVeeAntennaCalculator
 		}
 
 		#region Band model
-		
+
 		private class BandModel
 		{
 			private int _band;

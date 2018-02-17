@@ -19,7 +19,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var builder = new AntennaBuilder(MaxGroundLenghtAvailable);
 			var models = builder.GetWorkableBands();
 
-			Check.That(models.Extracting("Band")).ContainsExactly(40, 30, 20, 17, 15, 12, 10);
+			Check.That(models.Extracting("Band")).ContainsExactly(60, 40, 30, 20, 17, 15, 12, 10);
 		}
 
 		[Test]
@@ -56,10 +56,10 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var builder = new AntennaBuilder(MaxGroundLenghtAvailable);
 			var model = builder.GetMaxAntennaLength();
 			
-			Check.That(Math.Round(model.Height, 2)).IsEqualTo(7.4); // meter
-			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.8); // MHz
-			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(29.58); // meter
-			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.62); // meter
+			Check.That(Math.Round(model.Height, 2)).IsEqualTo(7.50); // meter
+			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.73); // MHz
+			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(30.01); // meter
+			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.99); // meter
 		}
 		
 		[Test]
