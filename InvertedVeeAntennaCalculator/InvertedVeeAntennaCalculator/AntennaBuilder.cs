@@ -11,6 +11,7 @@ namespace InvertedVeeAntennaCalculator
 		private const double MinGroundLengthAllowed = 1; // meter
 		private const double MinElevationAllowed = 0; // meter
 		private const double FrequencyStep = 0.01; // MHz
+		private const double ElevationStep = 0.25; // meter
 
 		private int _maxGroundLength;
 		private int _maxElevation;
@@ -55,7 +56,7 @@ namespace InvertedVeeAntennaCalculator
 			foreach (var model in bands)
 			{
 				var centerFrequency = model.CenterFrequency;
-				var elevationToTest = _maxElevation;
+				var elevationToTest = Convert.ToDouble(_maxElevation);
 				var bandAdded = false;
 
 				do
@@ -79,7 +80,7 @@ namespace InvertedVeeAntennaCalculator
 					}
 
 					// decrease elevation
-					elevationToTest--;
+					elevationToTest -= ElevationStep;
 				}
 				while (elevationToTest > 0 && !bandAdded);
 			}
@@ -91,7 +92,7 @@ namespace InvertedVeeAntennaCalculator
 		}
 
 		/// <summary>
-		/// Get all informations to mount the longuest antenna depending of the maximum available ground length
+		/// Get all informations to mount the longuest antenna according to the maximum length of the ground
 		/// </summary>
 		/// <returns></returns>
 		public AntennaMaxModel GetMaxAntennaLength()
@@ -104,6 +105,7 @@ namespace InvertedVeeAntennaCalculator
 			double antennaLength = 0;
 			double minFrequency = 0;
 
+			// decreases frequency until finding the lower usable frequency
 			for (var frequency = minWorkableFrequency; frequency > 0; frequency -= FrequencyStep)
 			{
 				var service = new CalculatorService(frequency);

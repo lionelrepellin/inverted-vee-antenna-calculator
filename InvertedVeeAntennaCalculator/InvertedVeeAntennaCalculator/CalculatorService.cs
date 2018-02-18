@@ -11,7 +11,7 @@ namespace InvertedVeeAntennaCalculator
 		private const double MinFrequencyAllowed = 0.1; // MHz
 		private const double MaxFrequencyAllowed = 30; // MHz
 		private const double MinElevationAllowed = 0; // meter
-		private const int X = 142;
+		private const double X = 142.5; // 300 / 2 * 0.95
 		private const int Angle = 120; // degrees at the top of the mast
 
 		private double _frequency;

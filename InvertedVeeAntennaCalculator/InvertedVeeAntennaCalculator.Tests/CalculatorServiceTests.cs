@@ -19,7 +19,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetTotalLength();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(20);
+			Check.That(result).IsEqualTo(20.07);
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetHeight();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(5);
+			Check.That(result).IsEqualTo(5.02);
 		}
 
 		[Test]
@@ -41,7 +41,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetHeight();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(5);
+			Check.That(result).IsEqualTo(5.02);
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetHeight();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(7);
+			Check.That(result).IsEqualTo(7.02);
 		}
 
 		[Test]
@@ -63,7 +63,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetGroundLength();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(17.32);
+			Check.That(result).IsEqualTo(17.38);
 		}
 
 		[Test]
@@ -74,7 +74,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetGroundLength();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(17.32);
+			Check.That(result).IsEqualTo(17.38);
 		}
 
 		[Test]
@@ -85,7 +85,7 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var result = service.GetGroundLength();
 
 			result = Math.Round(result, 2);
-			Check.That(result).IsEqualTo(24.25);
+			Check.That(result).IsEqualTo(24.31);
 		}
 
 		[Test]

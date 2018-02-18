@@ -28,15 +28,19 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var builder = new AntennaBuilder(MaxGroundLenghtAvailable, 5);
 			var models = builder.GetWorkableBands();
 
-			Check.That(models.Where(x => x.MaxElevation == 5).Extracting("Band")).ContainsExactly(20, 17, 15, 12, 10);
+			Check.That(models.Where(x => x.MaxElevation == 5).Extracting("Band")).ContainsExactly(17, 15, 12, 10);
 
-			// 2 meters max of elevation for 40 meters band
+			// 0.75 meter max of elevation for 60 meters band
+			var sixtyMeters = models.Single(x => x.Band == 60);
+			Check.That(sixtyMeters.MaxElevation).IsEqualTo(0.75);
+
+			// 2.25 meters max of elevation for 40 meters band
 			var fortyMeters = models.Single(x => x.Band == 40);
-			Check.That(fortyMeters.MaxElevation).IsEqualTo(2);
+			Check.That(fortyMeters.MaxElevation).IsEqualTo(2.25);
 
-			// 3 meters max of elevation for 30 meters band
+			// 3.75 meters max of elevation for 30 meters band
 			var thirtyMeters = models.Single(x => x.Band == 30);
-			Check.That(thirtyMeters.MaxElevation).IsEqualTo(3);
+			Check.That(thirtyMeters.MaxElevation).IsEqualTo(3.75);
 		}
 
 		[Test]
@@ -57,9 +61,9 @@ namespace InvertedVeeAntennaCalculator.Tests
 			var model = builder.GetMaxAntennaLength();
 			
 			Check.That(Math.Round(model.Height, 2)).IsEqualTo(7.50); // meter
-			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.73); // MHz
-			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(30.01); // meter
-			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.99); // meter
+			Check.That(Math.Round(model.MinFrequency, 2)).IsEqualTo(4.75); // MHz
+			Check.That(Math.Round(model.AntennaLength, 2)).IsEqualTo(29.99); // meter
+			Check.That(Math.Round(model.GroundLength, 2)).IsEqualTo(25.97); // meter
 		}
 		
 		[Test]
