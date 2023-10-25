@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InvertedVeeAntennaCalculator</RootNamespace>
     <AssemblyName>InvertedVeeAntennaCalculator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntennaBuilder.cs" />
+    <Compile Include="AntennaMaxModel.cs" />
+    <Compile Include="AntennaModel.cs" />
     <Compile Include="CalculatorService.cs" />
     <Compile Include="NotEnoughSpaceException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
